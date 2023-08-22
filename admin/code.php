@@ -1,158 +1,165 @@
-<?php 
-include('../config/dbcon.php');
-include('../functions/myfuntions.php');
+<?php
+session_start();
+include('../db/connect.php');
+include('../Functions/Myfunctions.php');
 
+// add thong tin trnag admin
+if (isset($_POST['add_category_btn'])) {
 
-    if (isset($_POST['add_category_btn']))
-    {
-        $name = $_POST['name'];
-        $slug = $_POST['slug'];
-        $description = $_POST['description'];
-        $meta_title = $_POST['meta_title'];
-        $meta_description = $_POST['meta_description'];
-        $meta_keywords = $_POST['meta_keywords'];
-        $status = isset($_POST['status']) ? '1' : '0';
-        $popular = isset($_POST['popular']) ? '1' : '0';
+    $name = $_POST['name'];
+    $slug = $_POST['slug'];
+    $description = $_POST['description'];
+    $meta_title = $_POST['meta_title'];
+    $meta_description = $_POST['meta_description'];
+    $meta_keywords = $_POST['meta_keywords'];
+    $status = isset($_POST['status']) ? '1' : '0';
+    $popular = isset($_POST['popular']) ? '1' : '0';
 
-        $image = $_FILES['image']['name'];
+    $image = $_FILES['image']['name'];
 
-        $path = "../uploads";
+    $path = "../uploads";
 
-        $image_ext = pathinfo($image, PATHINFO_EXTENSION); //pathinfo() sẽ lấy thông tin về đường dẫn truyền vào.
-        $filename = time().'.'.$image_ext;
+    $image_ext = pathinfo($image, PATHINFO_EXTENSION);
+    $filename = time() . '.' . $image_ext;
 
-        $cate_query = "INSERT INTO categories (name, slug, description, meta_title, meta_description, meta_keywords, status, popular, image) VALUES ('$name', '$slug', '$description', '$meta_title', '$meta_description', '$meta_keywords', '$status', '$popular', '$filename')";
-        
-        $cate_query_run = mysqli_query($con, $cate_query);
+    $cate_query = "INSERT INTO categories 
+    (name,slug,description,meta_title,meta_description,meta_keywords,status,popular,image)
+    VALUES ('$name','$slug','$description','$meta_title','$meta_description','$meta_keywords','$status','$popular','$filename') ";
 
-        if ($cate_query_run) {
-            
-            move_uploaded_file($_FILES['image']['tmp_name'], $path.'/'.$filename); // move_uploaded_file() sẽ kiểm tra để đảm bảo rằng file truyền vào là một file upload hợp lệ
-            redirect("add-category.php", "Category Added Successfully");
-            
-        } else {
-            redirect("add-category.php", "Đã xảy ra sự cố");
-        }
-        
+    $cate_query_run = mysqli_query($con, $cate_query);
+
+    if ($cate_query_run) {
+
+        move_uploaded_file($_FILES['image']['tmp_name'], $path . '/' . $filename);
+
+        redirect("add-category.php", "Category Added Successfully");
+    } else {
+        redirect("add-category.php", "Something Went Wrong");
     }
-    else if (isset($_POST['update_category_btn']))
-    {
-        $category_id = $_POST['category_id'];
-        $name = $_POST['name'];
-        $slug = $_POST['slug'];
-        $description = $_POST['description'];
-        $meta_title = $_POST['meta_title'];
-        $meta_description = $_POST['meta_description'];
-        $meta_keywords = $_POST['meta_keywords'];
-        $status = isset($_POST['status']) ? '1' : '0';
-        $popular = isset($_POST['popular']) ? '1' : '0';
+}
 
-        $new_image = $_FILES['image']['name'];
-        $old_image = $_POST['old_image'];
+// UDATE thoogn tin ADmin
+else if (isset($_POST['update_category_btn'])) {
+    $category_id = $_POST['category_id'];
+    $name = $_POST['name'];
+    $slug = $_POST['slug'];
+    $description = $_POST['description'];
+    $meta_title = $_POST['meta_title'];
+    $meta_description = $_POST['meta_description'];
+    $meta_keywords = $_POST['meta_keywords'];
+    $status = isset($_POST['status']) ? '1' : '0';
+    $popular = isset($_POST['popular']) ? '1' : '0';
 
-        if ($new_image != "")
-        {
-            // $update_filename = $new_image;
-            $image_ext = pathinfo($new_image, PATHINFO_EXTENSION); //pathinfo() sẽ lấy thông tin về đường dẫn truyền vào.
-            $update_filename = time().'.'.$image_ext;
+    $new_image = $_FILES['image']['name'];
+    $old_image = $_POST['old_image'];
 
-        }else{
-            $update_filename = $old_image;
-        }
-        $path = "../uploads";
-        
-        $update_query = "UPDATE categories SET name='$name', slug='$slug', description='$description', meta_title='$meta_title', meta_description='$meta_description', meta_keywords='$meta_keywords', status='$status', popular='$popular', image='$update_filename' WHERE id=$category_id";
-        
-        $update_query_run = mysqli_query($con, $update_query);
+    if ($new_image != "") {
+        // $update_filename = $new_image;
+        $image_ext = pathinfo($new_image, PATHINFO_EXTENSION);
+        $update_filename = time() . '.' . $image_ext;
+    } else {
+        $update_filename = $old_image;
+    }
+    $path = "../uploads";
+    $update_query = "UPDATE categories SET name='$name',slug='$slug', description='$description', 
+    meta_title='$meta_title',meta_description='$meta_description',meta_keywords='$meta_keywords',
+    status='$status',popular='$popular',image='$update_filename' WHERE id='$category_id'";
 
-        if ($update_query_run)
-        {
-            if ($_FILES['image']['name'] != "")
-            {
-                move_uploaded_file($_FILES['image']['tmp_name'], $path.'/'.$update_filename);
+    $update_query_run = mysqli_query($con, $update_query);
 
-                if (file_exists("../uploads/".$old_image))
-                {
-                    unlink("../uploads/".$old_image);
-                }
+    if ($update_query_run) {
+        if ($_FILES['image']['name'] != "") {
+            move_uploaded_file($_FILES['image']['tmp_name'], $path . '/' . $update_filename);
+            if (file_exists("../uploads/" . $old_image)) {
+                unlink("../uploads/" . $old_image);
             }
-            redirect("edit-category.php?id=$category_id", "Category Updated Successfully");
-        }else{
-            redirect("edit-category.php?id=$category_id", "Something Went wrong");
         }
+        redirect("../Admin/edit-category.php?id=$category_id", "Category Updated Successfully");
+    } else {
+        redirect("../Admin/edit-category.php?id=$category_id", "Something Went wrong");
     }
-    else if(isset($_POST['delete_category_btn']))
+}
+
+// DELETE san pham ADMIN
+else if (isset($_POST["delete_category_btn"])) {
+
+    $category_id = mysqli_real_escape_string($con, $_POST['category_id']);
+
+    $category_query = "SELECT * FROM categories WHERE id='$category_id'";
+    $category_query_run = mysqli_query($con, $category_query);
+    $category_data = mysqli_fetch_array($category_query_run);
+    $image = $category_data['image'];
+
+    $delete_query = "DELETE FROM categories WHERE id='$category_id'";
+    $delete_query_run = mysqli_query($con, $delete_query);
+
+    if ($delete_query_run) {
+
+        if (file_exists("../uploads/" . $image)) {
+            unlink("../uploads/" . $image);
+        }
+        redirect("category.php", "Category delete Successfully");
+    } else {
+        redirect("category.php", "Someting went wrong");
+    }
+}
+
+// Add product trong ADMIn
+else if (isset($_POST['add_product_btn'])) 
+{
+
+    $category_id = $_POST['category_id'];
+
+    $name = $_POST['name'];
+    $slug = $_POST['slug'];
+    $small_description = $_POST['small_description'];
+    $description = $_POST['description'];
+    $original_price = $_POST['original_price'];
+    $selling_price = $_POST['selling_price'];
+    $qty = $_POST['qty'];
+    $meta_title = $_POST['meta_title'];
+    $meta_description = $_POST['meta_description'];
+    $meta_keywords = $_POST['meta_keywords'];
+    $status = isset($_POST['status']) ? '1' : '0';
+    $trending = isset($_POST['trending']) ? '1' : '0';
+
+    $image = $_FILES['image']['name'];
+
+    $path = "../uploads";
+
+    $image_ext = pathinfo($image, PATHINFO_EXTENSION);//pathinfo() sẽ lấy thông tin về đường dẫn truyền vào.
+    $filename = time().'.'.$image_ext;
+
+    if ($name != "" && $slug != "" && $description != "") 
+
     {
-        $category_id = mysqli_real_escape_string($con, $_POST['category_id']);
+        $product_query = "INSERT INTO products (category_id,name,slug,small_description,description,original_price,selling_price,
+    qty,meta_title,meta_description,meta_keywords,status,trending,image) VALUES 
+    ('$category_id','$name','$slug','$small_description','$description','$original_price','$selling_price',
+    '$qty','$meta_title','$meta_description','$meta_keywords','$status','$trending','$filename')";
 
-        $category_query = "SELECT FROM categories WHERE id='$category_id' ";
-        $category_query_run = mysqli_query($con, $category_query);
-        $category_data = mysqli_fetch_array($category_query_run);
-        $image = $category_data['image'];
+        $product_query_run = mysqli_query($con, $product_query);
 
-        $delete_query = "DELETE FROM categories WHERE id='$category_id' ";
-        $delete_query_run = mysqli_query($con, $delete_query);
-        
-
-        if($delete_query_run)
+        if ($product_query_run) 
         {
-            if (file_exists("../uploads/".$image))
-            {
-                unlink("../uploads/".$image);
-            }
-            redirect("category.php", "Delete category Successfully");
+            move_uploaded_file($_FILES['image']['tmp_name'], $path.'/'.$filename);// move_uploaded_file() sẽ kiểm tra để đảm bảo rằng file truyền vào là một file upload hợp lệ
 
-        }else
+            redirect("add-product.php", "Product Added Successfully");
+        }
+        else 
         {
-            redirect("category.php", "Something went wrong");
+            redirect("add-product.php", "Something went wrong");
         }
     }
-    else if(isset($_POST['add_product_btn']))
+    else
     {
-        $category_id = $_POST['category_id'];
-
-        $name = $_POST['name'];
-        $slug = $_POST['slug'];
-        $small_description = $_POST['small_description'];
-        $description = $_POST['description'];
-        $original_price = $_POST['original_price'];
-        $selling_price = $_POST['selling_price'];
-        $qty = $_POST['qty'];
-        $meta_title = $_POST['meta_title'];
-        $meta_description = $_POST['meta_description'];
-        $meta_keywords = $_POST['meta_keywords'];
-        $status = isset($_POST['status']) ? '1' : '0';
-        $trending = isset($_POST['trending']) ? '1' : '0';
-
-        $image = $_FILES['image']['name'];
-
-        $path = "../uploads";
-
-        $image_ext = pathinfo($image, PATHINFO_EXTENSION); //pathinfo() sẽ lấy thông tin về đường dẫn truyền vào.
-        $filename = time().'.'.$image_ext;
-
-        if ($name != "" && $slug != "" && $description != "")
-        {
-            $product_query = "INSERT INTO products (category_id, name, slug, small_description, description, original_price, selling_price, qty, meta_title, meta_description, meta_keywords, status, trending, image) VALUE ('$category_id','$name','$slug','$small_description','$description','$original_price','$selling_price','$qty','$meta_title','$meta_description','$meta_keywords','$status','$trending','$filename')";
+        redirect("add-product.php", "All files are mandatory");
         
-            $product_query_run = mysqli_query($con, $product_query);
-    
-            if ($product_query_run)
-            {
-                move_uploaded_file($_FILES['image']['tmp_name'], $path.'/'.$filename); // move_uploaded_file() sẽ kiểm tra để đảm bảo rằng file truyền vào là một file upload hợp lệ
-                redirect("add-products.php", "Product Added Successfully");
-            }else
-            {
-                redirect("add-products.php", "Product Something went wrong");
-            }
-        }else
-        {
-            redirect("add-products.php", "All fields are mandatory");
-
-        }
-
     }
-    else if (isset($_POST['update_product_btn']))
+}
+
+// Update product 
+else if (isset($_POST['update_product_btn']))
     {
         $product_id = $_POST['product_id'];
         $category_id = $_POST['category_id'];
@@ -182,7 +189,7 @@ include('../functions/myfuntions.php');
         }else{
             $update_filename = $old_image;
         }
-        $path = "../uploads";
+        $path = "../Uploads";
         
         $update_product_query = "UPDATE products SET category_id='$category_id', name='$name', slug='$slug', small_description='$small_description', description='$description',
          original_price='$original_price', selling_price='$selling_price', qty='$qty', meta_title='$meta_title', meta_description='$meta_description',
@@ -196,16 +203,17 @@ include('../functions/myfuntions.php');
             {
                 move_uploaded_file($_FILES['image']['tmp_name'], $path.'/'.$update_filename);
 
-                if (file_exists("../uploads/".$old_image))
+                if (file_exists("../Uploads/".$old_image))
                 {
-                    unlink("../uploads/".$old_image);
+                    unlink("../Uploads/".$old_image);
                 }
             }
-            redirect("edit-products.php?id=$product_id", "Products Updated Successfully");
+            redirect("edit-product.php?id=$product_id", "Products Updated Successfully");
         }else{
-            redirect("edit-products.php?id=$product_id", "Something Went wrong");
+            redirect("edit-product.php?id=$product_id", "Something Went wrong");
         }
     }
+// Delete product
     else if(isset($_POST['delete_product_btn']))
     {
         $product_id = mysqli_real_escape_string($con, $_POST['product_id']);
@@ -237,5 +245,3 @@ include('../functions/myfuntions.php');
     else{
         header('Location: index.php');
     }
-
-?>

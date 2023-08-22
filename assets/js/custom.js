@@ -38,7 +38,7 @@ $(document).ready(function ()
 
         $.ajax({
             method: "POST",
-            url: "../functions/handlecart.php",
+            url: "../Functions/handlecart.php",
             data: {
                 "prod_id": prod_id,
                 "prod_qty": qty,
@@ -73,7 +73,7 @@ $(document).ready(function ()
 
         $.ajax({
             method: "POST",
-            url: "../functions/handlecart.php",
+            url: "../Functions/handlecart.php",
             data: {
                 "prod_id": prod_id,
                 "prod_qty": qty,
@@ -91,7 +91,7 @@ $(document).ready(function ()
 
         $.ajax({
             method: "POST",
-            url: "../functions/handlecart.php",
+            url: "../Functions/handlecart.php",
             data: {
                 "cart_id": cart_id,
                 "scope": "delete"

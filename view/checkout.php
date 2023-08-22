@@ -1,18 +1,53 @@
 <?php 
+session_start();
     $page_title = "Cart"; 
-    include '../functions/userfunctions.php';
-    include('../includes/header.php');
+    include '../Functions/userfunctions.php';
     
-    include('../functions/authenticate.php');
+    include('../Functions/authenticate.php');
 
     $cartItems = getCartItems();
 
     if (mysqli_num_rows($cartItems) == 0)
     {
-        header('Location: ../index.php');
+        header('Location: ../../../index.php');
     }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ashion | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Font Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <!--Bootsrap 4 CDN-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!--Custom styles-->
+    <link rel="stylesheet" type="text/css" href="../../css/form.css">
+    <link rel="stylesheet" type="text/css" href="../../css/custom.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Alertify Js -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.rtl.min.css" />
+</head>
+<body>
+    
 <div class="py-3 bg-light">
     <div class="container">
         <h6>
@@ -28,7 +63,7 @@
   <div class="container">
     <div class="card">
         <div class="card-body shadow">
-            <form action="../functions/placeorder.php" method="POST">
+            <form action="../Functions/placeorder.php" method="POST">
                 <div class="row">
                     <div class="col-md-7">
                         <h5 class="fw-bold">Basic Details</h5>
@@ -119,7 +154,8 @@
 </div>
 
 
-<?php include('../includes/footer.php'); ?>
+</body>
+</html>
 
 <!-- Replace "test" with your own sandbox Business account app client ID -->
 <script src="https://www.paypal.com/sdk/js?client-id=AWQIbg_TWdyf6mdJp0j1EAVZ6eXTHOqZ7keVPvx-C4PXEXGjF7J1D7nXOZCjk00AMC5Ym0b7O3qxtl7m&currency=USD"></script>
@@ -207,7 +243,7 @@
 
         $.ajax({
             method: "POST",
-            url: "../functions/placeorder.php",
+            url: "../Functions/placeorder.php",
             data: data,
             success: function (response) {
                 if (response = 201) {

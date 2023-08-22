@@ -1,7 +1,7 @@
 <?php
 
-include('../config/dbcon.php');
-include('authcode.php');
+include('../db/connect.php');
+include('../Functions/Authcode.php');
 
 
 if (isset($_SESSION['auth']))

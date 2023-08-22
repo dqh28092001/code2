@@ -1,7 +1,6 @@
 <?php
-    
-    require 'userfunctions.php';
-    include('../config/dbcon.php');
+    require '../Functions/userfunctions.php';
+    include('../db/connect.php');
 
 
     if (isset($_SESSION['auth']))
@@ -19,7 +18,7 @@
             if ($name == "" || $email == "" || $phone == "" || $pincode == "" || $address == "")
             {
                 $_SESSION['status'] = "All fields are mandatory";
-                header('Location: ../view/checkout.php');
+                header('Location: ../../../view/checkout.php');
                 exit(0);
             }
 
@@ -68,14 +67,15 @@
 
                 if ($payment_mode == "COD") {
                     $_SESSION['status'] = "Order placed successfully";
-                    header('Location: ../view/my-orders.php');
+                    header('Location: ../../../view/my-orders.php');
                     die();
                 }else{
                     echo 201;
                 }
             }
         }
-    }else{
+    }
+    else{
         header('Location: ../index.php');
     }
 

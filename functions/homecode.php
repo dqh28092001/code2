@@ -1,6 +1,6 @@
 <?php 
 session_start();
-include('./config/dbcon.php');
+include('../db/connect.php');
 
 function getAll($table)
 {

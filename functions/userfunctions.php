@@ -1,6 +1,6 @@
 <?php 
-session_start();
-include('../config/dbcon.php');
+
+include('../db/connect.php');
 
 function getAllActive($table)
 {
@@ -38,7 +38,6 @@ function getOrders()
 {
     global $con;
     $userId = $_SESSION['auth_user']['user_id'];
-    
     $query = "SELECT * FROM orders WHERE user_id='$userId' ORDER BY id DESC ";
     return $query_run = mysqli_query($con, $query);
 }
